@@ -1,6 +1,6 @@
-# Сервис управления ресторанными заказами — PR9
+# Сервис управления ресторанными заказами — ПР10 — административная панель
 
-Django-проект с моделями и запросами Django ORM.
+Настроены list_display, list_filter, search_fields и Inline для состава заказа. Подключён Django Debug Toolbar. Создайте администратора командой `python manage.py createsuperuser`; админка доступна по `/admin/`, toolbar — по `/__debug__/`.
 
 ## Запуск
 Для консольных этапов: `python main.py`.
