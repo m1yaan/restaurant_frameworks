@@ -1,30 +1,32 @@
-from storage import load_json
-from utils import print_menu, calculate_total, read_positive_int
+from models import Client, Dish, Table, Order
+from storage import JsonStorage
 
 def main():
-    clients = load_json("clients.json")
-    dishes = load_json("dishes.json")
-    print("Клиенты:")
-    for client in clients:
-        print(f"{client['id']}. {client['name']} ({client['phone']})")
-    name = input("Имя клиента для заказа: ").strip() or "Гость"
-    print_menu(dishes)
-    items = []
+    client = Client(input("Имя клиента: ").strip() or "Гость", input("Телефон: ").strip() or "не указан", 1)
+    table = Table(1, 4, 1)
+    guests = int(input("Количество гостей: ") or "1")
+    if not table.can_seat(guests):
+        print("Вместимость стола недостаточна.")
+        return
+    menu = [
+        Dish("Борщ", 350, "Первое", 1),
+        Dish("Паста Карбонара", 520, "Горячее", 2),
+        Dish("Чай", 120, "Напитки", 3),
+    ]
+    for dish in menu:
+        print(f"{dish.id}. {dish}")
+    order = Order(client, table)
     while True:
-        raw = input("ID блюда (Enter — закончить): ").strip()
+        raw = input("ID блюда (Enter — завершить): ").strip()
         if not raw:
             break
-        try:
-            dish_id = int(raw)
-        except ValueError:
-            print("ID должен быть числом.")
-            continue
-        if not any(d["id"] == dish_id for d in dishes):
-            print("Блюдо не найдено.")
-            continue
-        items.append({"dish_id": dish_id, "quantity": read_positive_int("Количество: ")})
-    print(f"Клиент: {name}")
-    print(f"Итого: {calculate_total(items, dishes)} руб.")
+        dish = next((item for item in menu if item.id == int(raw)), None)
+        if dish:
+            order.add_dish(dish, int(input("Количество: ") or "1"))
+    order.id = 1
+    JsonStorage().save([order])
+    print(order)
+    print("Заказ сохранён в orders.json")
 
 if __name__ == "__main__":
     main()

@@ -1,20 +1,16 @@
 import json
 from pathlib import Path
 
-DATA_DIR = Path(__file__).parent / "data"
+class JsonStorage:
+    def __init__(self, filename="orders.json"):
+        self.path = Path(__file__).parent / filename
 
-def load_json(filename, default=None):
-    path = DATA_DIR / filename
-    try:
-        with path.open(encoding="utf-8") as file:
+    def save(self, objects):
+        with self.path.open("w", encoding="utf-8") as file:
+            json.dump([obj.to_dict() for obj in objects], file, ensure_ascii=False, indent=2)
+
+    def load_raw(self):
+        if not self.path.exists():
+            return []
+        with self.path.open(encoding="utf-8") as file:
             return json.load(file)
-    except FileNotFoundError:
-        return [] if default is None else default
-    except json.JSONDecodeError as exc:
-        raise ValueError(f"Файл {filename} содержит некорректный JSON") from exc
-
-def save_json(filename, data):
-    path = DATA_DIR / filename
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as file:
-        json.dump(data, file, ensure_ascii=False, indent=2)
