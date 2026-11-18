@@ -1,52 +1,30 @@
-import json
-
-MENU = [
-    {"id": 1, "name": "Борщ", "price": 350},
-    {"id": 2, "name": "Паста Карбонара", "price": 520},
-    {"id": 3, "name": "Цезарь", "price": 430},
-    {"id": 4, "name": "Чай", "price": 120},
-]
-
-def show_menu():
-    print("\nМЕНЮ")
-    for dish in MENU:
-        print(f"{dish['id']}. {dish['name']} — {dish['price']} руб.")
+from storage import load_json
+from utils import print_menu, calculate_total, read_positive_int
 
 def main():
-    print("=== Сервис управления ресторанными заказами ===")
-    client_name = input("Введите имя клиента: ").strip() or "Гость"
-    show_menu()
-    total = 0
-    selected = []
+    clients = load_json("clients.json")
+    dishes = load_json("dishes.json")
+    print("Клиенты:")
+    for client in clients:
+        print(f"{client['id']}. {client['name']} ({client['phone']})")
+    name = input("Имя клиента для заказа: ").strip() or "Гость"
+    print_menu(dishes)
+    items = []
     while True:
-        choice = input("\nВведите номер блюда (Enter — завершить): ").strip()
-        if not choice:
+        raw = input("ID блюда (Enter — закончить): ").strip()
+        if not raw:
             break
-        if not choice.isdigit():
-            print("Введите числовой номер блюда.")
-            continue
-        dish = next((item for item in MENU if item["id"] == int(choice)), None)
-        if dish is None:
-            print("Такого блюда нет в меню.")
-            continue
-        qty_text = input("Количество: ").strip()
         try:
-            qty = int(qty_text)
-            if qty <= 0:
-                raise ValueError
+            dish_id = int(raw)
         except ValueError:
-            print("Количество должно быть положительным целым числом.")
+            print("ID должен быть числом.")
             continue
-        subtotal = dish["price"] * qty
-        total += subtotal
-        selected.append({"dish": dish["name"], "quantity": qty, "subtotal": subtotal})
-        print(f"Добавлено: {dish['name']} × {qty} = {subtotal} руб.")
-    print("\n--- Чек ---")
-    print(f"Клиент: {client_name}")
-    for item in selected:
-        print(f"{item['dish']} × {item['quantity']} — {item['subtotal']} руб.")
-    print(f"Итого: {total} руб.")
-    print("Спасибо за заказ!")
+        if not any(d["id"] == dish_id for d in dishes):
+            print("Блюдо не найдено.")
+            continue
+        items.append({"dish_id": dish_id, "quantity": read_positive_int("Количество: ")})
+    print(f"Клиент: {name}")
+    print(f"Итого: {calculate_total(items, dishes)} руб.")
 
 if __name__ == "__main__":
     main()
