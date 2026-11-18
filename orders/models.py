@@ -20,6 +20,7 @@ class Dish(models.Model):
     category = models.CharField("Категория", max_length=80)
     price = models.DecimalField("Цена", max_digits=8, decimal_places=2, validators=[MinValueValidator(0)])
     is_available = models.BooleanField("В меню", default=True)
+    photo = models.ImageField("Фото", upload_to="dishes/", blank=True, null=True)
     def __str__(self): return self.name
     class Meta: verbose_name = "блюдо"; verbose_name_plural = "блюда"
 
@@ -30,6 +31,7 @@ class Order(models.Model):
     dishes = models.ManyToManyField(Dish, through="OrderItem", related_name="orders", verbose_name="Блюда")
     status = models.CharField("Статус", max_length=20, choices=STATUS_CHOICES, default="new")
     created_at = models.DateTimeField("Создан", auto_now_add=True)
+    reservation_at = models.DateTimeField("Дата и время бронирования", default=__import__("django.utils.timezone", fromlist=["now"]).now)
     def __str__(self): return f"Заказ №{self.pk}"
     class Meta: ordering = ["-created_at"]; verbose_name = "заказ"; verbose_name_plural = "заказы"
 
