@@ -1,1 +1,0 @@
-{% extends "base.html" %}{% block content %}<h1>Блюда</h1><ul>{% for dish in dishes %}<li>{{ dish.name }} — {{ dish.price }} руб. ({{ dish.category }})</li>{% empty %}<li>Нет блюд</li>{% endfor %}</ul>{% endblock %}
