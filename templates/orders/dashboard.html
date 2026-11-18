@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block content %}<h1>Панель управления рестораном</h1>
+<div class="row g-3 mb-4"><div class="col"><div class="alert alert-primary">Блюд: {{ all_count }}</div></div><div class="col"><div class="alert alert-success">Доступно: {{ available_count }}</div></div><div class="col"><div class="alert alert-info">Новых заказов: {{ new_count }}</div></div><div class="col"><div class="alert alert-secondary">Средняя цена: {{ average_price|default:"—" }}</div></div></div>
+<h2>Блюда по цене</h2><ul>{% for dish in dishes %}<li>{{ dish.name }} — {{ dish.price }} руб.</li>{% empty %}<li>Нет блюд. Добавьте их через /admin/.</li>{% endfor %}</ul>
+<h2>Последние заказы</h2><ul>{% for order in recent_orders %}<li>{{ order }} — {{ order.client }} / {{ order.table }}</li>{% empty %}<li>Заказов пока нет.</li>{% endfor %}</ul>
+<h2>Клиенты и количество заказов</h2><ul>{% for client in client_order_counts %}<li>{{ client.name }}: {{ client.order_count }}</li>{% endfor %}</ul>
+<h2>Продажи блюд</h2><ul>{% for dish in dish_sales %}<li>{{ dish.name }}: {{ dish.sold|default:0 }}</li>{% endfor %}</ul>
+<h2>Заказы (страница {{ orders.number }} из {{ orders.paginator.num_pages }})</h2><ul>{% for order in orders %}<li>{{ order }} — {{ order.get_status_display }}</li>{% empty %}<li>Нет заказов.</li>{% endfor %}</ul>
+{% if orders.has_previous %}<a href="?page={{ orders.previous_page_number }}">Назад</a>{% endif %} {% if orders.has_next %}<a href="?page={{ orders.next_page_number }}">Вперёд</a>{% endif %}{% endblock %}
