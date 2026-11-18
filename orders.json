@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "client": {
+      "id": 1,
+      "name": "2",
+      "phone": "87345555555"
+    },
+    "table": {
+      "id": 1,
+      "number": 1,
+      "capacity": 4,
+      "is_available": true
+    },
+    "items": [
+      {
+        "dish": {
+          "id": 2,
+          "name": "Паста Карбонара",
+          "price": 520.0,
+          "category": "Горячее"
+        },
+        "quantity": 3
+      }
+    ],
+    "status": "Новый",
+    "created_at": "2026-11-18T03:22:30",
+    "total": 1560.0
+  }
+]
