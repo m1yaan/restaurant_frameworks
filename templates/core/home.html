@@ -1,1 +1,1 @@
-{% extends "base.html" %}{% block content %}<h1>Сервис ресторана</h1><p>Клиентов: {{ counts.clients }}, блюд: {{ counts.dishes }}, заказов: {{ counts.orders }}</p>{% endblock %}
+{% extends "base.html" %}{% block title %}Главная{% endblock %}{% block content %}<div class="p-5 bg-light rounded"><h1>Сервис управления ресторанными заказами</h1><p>Меню, клиенты, столы и заказы в одном интерфейсе.</p><a class="btn btn-primary" href="/dishes/">Посмотреть меню</a></div>{% endblock %}
